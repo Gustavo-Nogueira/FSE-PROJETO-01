@@ -15,11 +15,11 @@
 
 void* handle_uart_reading(void* args) {
     float curr_ti, curr_tr, last_ti;
-    int bytes, curr_cs, first_ti = 1;
+    int curr_cs, first_ti = 1;
 
     while (1) {
         // TI
-        bytes = request_internal_temperature(&curr_ti);
+        request_internal_temperature(&curr_ti);
         if (first_ti) {
             last_ti = curr_ti;
             first_ti = 0;
@@ -31,13 +31,13 @@ void* handle_uart_reading(void* args) {
         usleep(UART_DELAY);
         // TR
         if (get_tr_acquisition_mode() == TR_POTENTIOMETER) {
-            bytes = request_reference_temperature(&curr_tr);
+            request_reference_temperature(&curr_tr);
             set_tr((double)curr_tr);
         }
         usleep(UART_DELAY);
         // CS
         if (get_cs_acquisition_mode() == CONTROL_STRATEGY_SWITCH) {
-            bytes = request_control_strategy(&curr_cs);
+            request_control_strategy(&curr_cs);
             set_control_strategy(curr_cs);
         }
         usleep(UART_DELAY);
